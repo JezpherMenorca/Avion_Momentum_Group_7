@@ -24,7 +24,7 @@ var images = [
 
   changeBackground();
   //calls the 'changeBackground' function when the script runs.
-  setInterval(changeBackground, 6000);
+  setInterval(changeBackground, 10000);
   //timer
   
   
