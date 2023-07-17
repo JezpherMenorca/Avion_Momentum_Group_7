@@ -24,7 +24,7 @@ var images = [
 
   changeBackground();
   //calls the 'changeBackground' function when the script runs.
-  setInterval(changeBackground, 6000);
+  setInterval(changeBackground, 20000);
   //timer
   
   
@@ -176,7 +176,7 @@ var images = [
     });
   }
   updateQuote();
-  setInterval(updateQuote, 6000);
+  setInterval(updateQuote, 20000);
   
   showTime();
   setBg();
