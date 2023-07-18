@@ -125,7 +125,7 @@ if (
               <p>Your Name: ${result.value[0]}</p>
               <p>Your Focus: ${result.value[1]}</p>
             `,
-          confirmButtonText: "Lovely!",
+          confirmButtonText: "Seize the day!",
         });
 
         localStorage.setItem("name", result.value[0]);
