@@ -35,6 +35,7 @@ var images = [
   focusElement = document.getElementById("focus"),
   content = document.getElementById("content"),
   author = document.getElementById("author");
+  //declares and initializes variables by selecting elements from the HTML document using their respective IDs.
 
 function showTime() {
   let today = new Date(),
@@ -45,10 +46,14 @@ function showTime() {
   time.innerHTML = `${hour}<span>:</span>${addZero(min)}<span>:</span>${addZero(sec)}`;
   setTimeout(showTime, 1000);
 }
+//showtime function to get current time using 'Date' object and update 'time' element in the HTML with the formatted time.
+//uses the addZero function to add leading zeros to hours, minutes, and seconds
+//function repeats every second using 'setTimeout'
 
 function addZero(n) {
   return (parseInt(n, 10) < 10 ? "0" : "") + n;
 }
+// addZero function takes a number n as input and adds a leading zero if the number is less than 10. It returns the formatted number as a string.
 
 function setBg() {
   let hour = new Date().getHours();
@@ -61,6 +66,7 @@ function setBg() {
     greeting.textContent = "Good Evening, ";
   }
 }
+// setBg function sets the greeting message based on the current time. If the hour is less than 12, it displays "Good Morning," if it's between 12 and 18, it displays "Good Afternoon," and otherwise, it displays "Good Evening."
 
 function updateNameAndFocus() {
   nameElement.addEventListener("input", function () {
@@ -71,6 +77,7 @@ function updateNameAndFocus() {
     localStorage.setItem("focus", focusElement.textContent);
   });
 }
+//The updateNameAndFocus function adds event listeners to the nameElement and focusElement input fields. Whenever the user inputs a value, it updates the corresponding data in the browser's localStorage.
 
 function getName() {
   if (localStorage.getItem("name") === null) {
@@ -87,6 +94,7 @@ function getFocus() {
     focusElement.textContent = localStorage.getItem("focus");
   }
 }
+//The getName and getFocus functions retrieve the stored values for name and focus from the localStorage. If the values are not present, it sets default placeholder text in the corresponding elements.
 
 updateNameAndFocus();
 getName();
@@ -128,6 +136,7 @@ if (
       }
     });
 }
+//This code block checks if the name and focus values are not present in the localStorage. If they are not, it uses a library called SweetAlert (Swal) to display a prompt asking the user to enter their name and focus. The entered values are stored in the localStorage, and the corresponding elements are updated.
 
 axios.get("https://api.quotable.io/random").then((res) => {
   content.textContent = res.data.content;
@@ -140,6 +149,7 @@ function updateQuote() {
     author.textContent = res.data.author;
   });
 }
+//The updateQuote function is defined to update the quote displayed on the dashboard. It fetches a new quote using the API and updates the content and author elements. The function is called once initially to display the first quote, and then it is set to run every 20 seconds using setInterval.
 
 updateQuote();
 setInterval(updateQuote, 20000);
