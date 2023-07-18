@@ -30,156 +30,123 @@ var images = [
   
   //DASHBOARD
   const time = document.getElementById("time"),
-    greeting = document.getElementById("greeting"),
-    name = document.getElementById("name"),
-    focus = document.getElementById("focus"),
-    content = document.getElementById("content"),
-    author = document.getElementById("author");
+  greeting = document.getElementById("greeting"),
+  nameElement = document.getElementById("name"),
+  focusElement = document.getElementById("focus"),
+  content = document.getElementById("content"),
+  author = document.getElementById("author");
 
-    //declare constants (const) that store references to various HTML elements using document.getElementById(). The elements are retrieved based on their respective IDs and assigned to the corresponding variables. These variables will be used to update and display data on the webpage.
-  
-  function showTime() {
-    let today = new Date(),
-      hour = today.getHours(),
-      min = today.getMinutes(),
-      sec = today.getSeconds();
-  //function, showTime(), is responsible for displaying the current time on the webpage. It uses the Date object to retrieve the current hour, minute, and second.
-    hour = addZero(hour);
-  //The addZero() function is called to ensure the time components have leading zeros if necessary. The formatted time is then assigned to the innerHTML property of the time element.
-    time.innerHTML = `${hour}<span>:</span>${addZero(min)}<span>:</span>${addZero(
-      sec
-    )}`;
-  
-    setTimeout(showTime, 1000);
+function showTime() {
+  let today = new Date(),
+    hour = today.getHours(),
+    min = today.getMinutes(),
+    sec = today.getSeconds();
+  hour = addZero(hour);
+  time.innerHTML = `${hour}<span>:</span>${addZero(min)}<span>:</span>${addZero(sec)}`;
+  setTimeout(showTime, 1000);
+}
+
+function addZero(n) {
+  return (parseInt(n, 10) < 10 ? "0" : "") + n;
+}
+
+function setBg() {
+  let hour = new Date().getHours();
+
+  if (hour < 12) {
+    greeting.textContent = "Good Morning, ";
+  } else if (hour < 18) {
+    greeting.textContent = "Good Afternoon, ";
+  } else {
+    greeting.textContent = "Good Evening, ";
   }
-  // setTimeout() to schedule itself to run every 1000 milliseconds (1 second).
-  
-  
+}
 
+function updateNameAndFocus() {
+  nameElement.addEventListener("input", function () {
+    localStorage.setItem("name", nameElement.textContent);
+  });
 
-  function addZero(n) {
-    return (parseInt(n, 10) < 10 ? "0" : "") + n;
+  focusElement.addEventListener("input", function () {
+    localStorage.setItem("focus", focusElement.textContent);
+  });
+}
+
+function getName() {
+  if (localStorage.getItem("name") === null) {
+    nameElement.textContent = "[Enter Name]";
+  } else {
+    nameElement.textContent = localStorage.getItem("name");
   }
-  // function, addZero(n), is a utility function that adds a leading zero to a number if it is less than 10. It helps ensure the time components are displayed in a consistent format.
-  
-  function setBg() {
-    let hour = new Date().getHours();
-  
-    if (hour < 12) {
-      greeting.textContent = "Good Morning, ";
-    } else if (hour < 18) {
-      greeting.textContent = "Good Afternoon, ";
-    } else {
-      greeting.textContent = "Good Evening, ";
-    }
-  }
-  //The setBg() function is responsible for setting the appropriate greeting message based on the current time. It retrieves the current hour using the getHours() method of the Date object. Depending on the hour, it sets the textContent of the greeting element accordingly.
-  
+}
 
-  function updateNameAndFocus() {
-    const nameElement = document.getElementById("name");
-    const focusElement = document.getElementById("focus");
-  
-    nameElement.addEventListener("input", function () {
-      localStorage.setItem("name", nameElement.textContent);
+function getFocus() {
+  if (localStorage.getItem("focus") === null) {
+    focusElement.textContent = "[Enter Focus]";
+  } else {
+    focusElement.textContent = localStorage.getItem("focus");
+  }
+}
+
+updateNameAndFocus();
+getName();
+getFocus();
+
+if (
+  localStorage.getItem("name") === null &&
+  localStorage.getItem("focus") === null
+) {
+  Swal.mixin({
+    input: "text",
+    confirmButtonText: "Next &rarr;",
+    progressSteps: ["1", "2"],
+  })
+    .queue([
+      {
+        title: "Your Name",
+      },
+      {
+        title: "Your Focus",
+      },
+    ])
+    .then((result) => {
+      if (result.value) {
+        Swal.fire({
+          title: "All done!",
+          html: `
+              <p>Your Name: ${result.value[0]}</p>
+              <p>Your Focus: ${result.value[1]}</p>
+            `,
+          confirmButtonText: "Lovely!",
+        });
+
+        localStorage.setItem("name", result.value[0]);
+        localStorage.setItem("focus", result.value[1]);
+
+        getName();
+        getFocus();
+      }
     });
-  
-    focusElement.addEventListener("input", function () {
-      localStorage.setItem("focus", focusElement.textContent);
-    });
-  }
-  //This function, updateNameAndFocus(), adds event listeners to the name and focus elements. When the user inputs their name or focus, the event listeners trigger and update the corresponding values in the localStorage.
+}
 
-  function getName() {
-    const nameElement = document.getElementById("name");
-  
-    if (localStorage.getItem("name") === null) {
-      nameElement.textContent = "[Enter Name]";
-    } else {
-      nameElement.textContent = localStorage.getItem("name");
-    }
-  }
-  
-  function getFocus() {
-    const focusElement = document.getElementById("focus");
-  
-    if (localStorage.getItem("focus") === null) {
-      focusElement.textContent = "[Enter Focus]";
-    } else {
-      focusElement.textContent = localStorage.getItem("focus");
-    }
-  }
-  //These functions, getName() and getFocus(), retrieve the stored name and focus from the localStorage. If the values are present, they update the corresponding elements' textContent with the retrieved values. Otherwise, they set default text.
-  
-  updateNameAndFocus();
-  
-  
-  getName();
-  getFocus();
-  
-  if (
-    localStorage.getItem("name") === null &&
-    localStorage.getItem("focus") === null
-  ) {
-    //This if statement checks if the name and focus values in the localStorage are null, indicating that the user has not entered their name and focus yet.
-    Swal.mixin({
-      input: "text",
-      confirmButtonText: "Next &rarr;",
-      progressSteps: ["1", "2"],
-    })
-    //initializes a SweetAlert2 (Swal) instance with custom settings. It configures the Swal instance to display two input fields of type "text" for user input. The "Next" button is displayed with a right arrow (&rarr;) as the confirmation button text. The progressSteps option indicates the progress steps of the Swal instance and is set to ["1", "2"].
-      .queue([
-        {
-          title: "Your Name",
-        },
-        {
-          title: "Your Focus",
-        },
-      ])
-      //The queue() function is called on the Swal instance, providing an array of objects as input. Each object represents a step in the Swal sequence. In this case, there are two steps: one for entering the name and one for entering the focus. Each step is defined with a title property specifying the title of the step.
-      .then((result) => {
-        if (result.value) {
-          Swal.fire({
-            title: "All done!",
-            html: `
-                <p>Your Name: ${result.value[0]}</p>
-                <p>Your Focus: ${result.value[1]}</p>
-              `,
-            confirmButtonText: "Lovely!",
-          });
-          /*
-          The then() function is chained to the queue() function. It specifies a callback function that will be executed when the user submits the Swal sequence by clicking the confirmation button. The callback function receives the result object as a parameter.
-          Within the callback function, an if statement checks if result.value is truthy, indicating that the user has entered values in both input fields.
+axios.get("https://api.quotable.io/random").then((res) => {
+  content.textContent = res.data.content;
+  author.textContent = res.data.author;
+});
 
-          If the user has entered values, this code displays another Swal alert using the Swal.fire() function. The alert shows a title of "All done!" and the user's entered name and focus as paragraphs in the html option. The confirmation button text is set to "Lovely!".
-          */
-  
-          localStorage.setItem("name", result.value[0]);
-          localStorage.setItem("focus", result.value[1]);
-          //These lines store the user's entered name and focus in the localStorage using the setItem() method. The first parameter specifies the key ("name" and "focus") under which the values are stored, and the second parameter provides the corresponding values from result.value.
-          
-          getName();
-          getFocus();
-          //calling the getName and getFocus function.
-        }
-      });
-  }
-  
+function updateQuote() {
   axios.get("https://api.quotable.io/random").then((res) => {
     content.textContent = res.data.content;
     author.textContent = res.data.author;
   });
-  function updateQuote() {
-    axios.get("https://api.quotable.io/random").then((res) => {
-      content.textContent = res.data.content;
-      author.textContent = res.data.author;
-    });
-  }
-  updateQuote();
-  setInterval(updateQuote, 20000);
-  
-  showTime();
-  setBg();
+}
+
+updateQuote();
+setInterval(updateQuote, 20000);
+
+showTime();
+setBg();
+
   
   
   //TODO LIST
